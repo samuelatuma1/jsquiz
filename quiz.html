@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href='./index.css'>
+    <link rel='stylesheet' href='./quiz.css'>
+</head>
+<body>
+    <script type='module'>
+            import pyquestions from './python.js'
+            import jsquestions from './javascript.js'
+
+        document.addEventListener("DOMContentLoaded", runQuiz)
+
+        function runQuiz(e) {
+            if(!sessionStorage.getItem("quiz")){
+                alert("No quiz chosen. Please, choose a quiz")
+                window.location.href = './index.html'
+                return
+            }
+            const quiz = sessionStorage.getItem("quiz")
+            // alert(`Welcome ${quiz} quiz. Wish you the best`)
+            writeQuiz(quiz)
+        }
+        let questions;
+        let quest_size;
+        const answered = [] // indexes of answered questions
+        const answered_quests= {}
+        function writeQuiz(quiz){
+            questions = sessionStorage.getItem("quiz") == 'python' ? 
+            pyquestions : jsquestions
+            quest_size = 15 > questions.length ? questions.length : 15
+            console.log(questions)
+            newQuest(questions)
+
+        }
+        
+
+        function newQuest(questions){
+            // Pick a random question_idx that hasn't been answered yet
+            
+            if (quest_size > answered.length){
+                let quest_idx = Math.floor(Math.random() * questions.length)
+                while(answered.includes(quest_idx)){
+                    quest_idx = Math.floor(Math.random() * questions.length)
+                }
+                
+
+                // Add quest_idx to answered questions
+                answered.push(quest_idx)
+                
+                // display question on matching index
+                displayQuest(quest_idx)
+
+                
+                return
+            }
+
+            // What to do if all questions have been answered
+            showResult()
+
+        }
+        let curr
+        function displayQuest(idx){
+            curr = idx
+            let quest = questions[idx]
+            let div = document.createElement('div')
+            div.innerHTML = `
+            <div>
+            <span>
+                Question ${answered.length} of ${quest_size}
+            </span><br>
+            <p><strong>
+                ${quest.quest}
+            </strong></p>
+
+            <div id='options'>
+                <p data-option='a' class='optionData'>${quest.a}</p>
+                <p data-option='b' class='optionData'>${quest.b}</p>
+                <p data-option='c' class='optionData'>${quest.c}</p>
+                <p data-option='d' class='optionData'>${quest.d}</p>
+
+                <button id='next_quest' disabled>Next</button>
+            </div>
+    </div>
+            `
+            let cont = document.querySelector("#container")
+            cont.innerHTML = ''
+            cont.append(div)
+        }
+
+        document.body.onclick = submitAnswer
+
+        function submitAnswer(e){
+            let clicked = e.target
+            if(clicked.classList.contains('optionData')){
+                document.querySelectorAll('.optionData').forEach(option => {
+                    option.classList.remove("chosen")
+                })
+                clicked.classList.add("chosen")
+                
+                // check if option choice is correct
+                const chosenOption = clicked.getAttribute("data-option")
+                let question = questions[curr]
+                let correct_ans = question.ans
+                let correct = false
+                if (correct_ans === chosenOption){
+                    correct = true
+                }
+                answered_quests[curr] = correct
+                console.log(answered_quests)
+
+                // Allow next question's button to be clicked
+                document.querySelector("#next_quest").disabled = false
+            }
+            
+            if (clicked.id === "next_quest"){
+                newQuest(questions)
+            }
+        }
+
+        
+
+        function showResult(){
+            console.log(answered_quests)
+
+            // count correct scores
+            let total_correct = 0
+            for(let score in answered_quests){
+                if(answered_quests[score]){
+                    total_correct += 1
+                }
+            }
+            const score = Math.floor((total_correct / quest_size) * 100)
+            
+            let div = document.createElement('div')
+            div.innerHTML = `
+            <div>
+                <main>
+                        Your Score for ${sessionStorage.getItem("quiz")} is 
+                        <h1>
+                            ${score}% 
+                        </h1>
+                    <a href='./index.html'>Home</a>
+                    <a href='./index.html'>Another</a>
+                </main>
+            </div>
+            `
+            let cont = document.querySelector("#container")
+            cont.innerHTML = ''
+            cont.append(div)
+        }
+
+        
+    </script>
+    <style>
+        
+    </style>
+
+    
+
+
+<div id='container'>
+    
+</div>
+
+
+</body>
+</html>

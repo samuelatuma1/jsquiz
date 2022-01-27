@@ -1,0 +1,62 @@
+#container > div{
+    padding: 20px;
+    border-radius: 40px;
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 20px 0px rgb(158, 156, 156);
+    margin: 30px;
+}
+
+#container > div #options p{
+    padding: 10px;
+    padding-left: 20px;
+    border-radius: 20px;
+    background-color: rgb(53, 84, 111);
+    color: rgb(245, 231, 212);
+    cursor: pointer;
+
+
+}
+#container > div #options button:disabled{
+    padding: 10px;
+    border-radius: 3px;
+    /* border-bottom-left-radius: 30px;; */
+    border: 1px solid transparent;
+
+    background-color: maroon;
+    color: burlywood;
+}
+#container > div #options button{
+    padding: 10px;
+    border-radius: 3px;
+    /* border-bottom-left-radius: 30px;; */
+    border: 1px solid transparent;
+
+    background-color: teal;
+    color: white;;
+}
+#container > div #options .chosen{
+   
+    background-color:  burlywood;
+    color: rgb(53, 84, 111);
+}
+
+#container main{
+    text-align: center;
+}
+
+#container main > a{
+    color: aliceblue;
+    background-color: navy;
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+    margin: 10px;
+    transition : 0.5s linear;
+}
+
+#container main > a:hover {
+    box-shadow: 0px 0px 10px 0px navy;
+
+}
